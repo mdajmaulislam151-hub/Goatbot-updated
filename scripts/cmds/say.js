@@ -5,20 +5,22 @@ module.exports = {
   config: {
     name: "say",
     version: "3.0",
-    author: "ajmaul",
+    author: "AJMAUL",
     category: "fun"
   },
 
   onStart: async function ({ api, event, args }) {
     const text = args.join(" ");
-    if (!text) return api.sendMessage("⚠️ | Write something", event.threadID);
+    if (!text) return api.sendMessage("⚠️ | Write something to speak!", event.threadID);
 
     try {
-      // Better anime-style voice (female style)
-      const url = `https://api.streamelements.com/kappa/v2/speech?voice=Kimberly&text=${encodeURIComponent(text)}`;
+      // Example: Using FakeYou (character style) TTS
+      const voiceModel = "cute_anime_girl";  // replace with available voice model from service
+      const url = `https://api.fakeyou.com/tts/inference?voice=${voiceModel}&text=${encodeURIComponent(text)}`;
 
-      const path = __dirname + "/cache/anime.mp3";
+      const path = __dirname + "/cache/anime_voice.mp3";
 
+      // Request audio from TTS
       const res = await axios.get(url, { responseType: "arraybuffer" });
       fs.writeFileSync(path, res.data);
 
@@ -26,8 +28,9 @@ module.exports = {
         attachment: fs.createReadStream(path)
       }, event.threadID);
 
-    } catch (e) {
-      api.sendMessage("❌ Voice error", event.threadID);
+    } catch (err) {
+      console.error(err);
+      api.sendMessage("❌ Voice generation failed!", event.threadID);
     }
   }
 };
