@@ -3,7 +3,7 @@
         "name": "ps_l",
         "value": "1",
         "domain": ".facebook.com",
-        "hostOnly": false,
+        "hostOnly": false, 
         "path": "/",
         "secure": true,
         "httpOnly": true,
