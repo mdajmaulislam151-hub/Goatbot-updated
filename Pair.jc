@@ -1,0 +1,37 @@
+module.exports = {
+  config: {
+    name: "pair",
+    version: "1.0",
+    author: "ajmaul",
+    countDown: 5,
+    role: 0,
+    shortDescription: "Pair someone",
+    longDescription: "Random pairing system",
+    category: "fun",
+    guide: "{pn}"
+  },
+
+  onStart: async function ({ api, event, usersData }) {
+    const { threadID, senderID, participantIDs } = event;
+
+    const botID = api.getCurrentUserID();
+    const listUser = participantIDs.filter(id => id != botID && id != senderID);
+
+    if (listUser.length === 0) {
+      return api.sendMessage("❌ Not enough users", threadID);
+    }
+
+    const randomID = listUser[Math.floor(Math.random() * listUser.length)];
+
+    const name1 = await usersData.getName(senderID);
+    const name2 = await usersData.getName(randomID);
+
+    api.sendMessage({
+      body: `💖 Pair Result 💖\n\n${name1} ❤️ ${name2}`,
+      mentions: [
+        { id: senderID, tag: name1 },
+        { id: randomID, tag: name2 }
+      ]
+    }, threadID);
+  }
+};
